@@ -26,14 +26,14 @@ class LogReg(nn.Module):
 
 
 class Discriminator(nn.Module):
-    """_summary_
-
-    Parameters
-    ----------
-    nn
-        返回合并后的评分张量
-    """
     def __init__(self, dim):
+        """该层接受两个维度为 dim 的向量，通过学习到的权重和偏置，计算出一个标量输出。这通常用于衡量两个输入向量之间的相似性或相关性。
+
+        Parameters
+        ----------
+        dim
+            输入向量的维度
+        """
         super(Discriminator, self).__init__()
         self.fn = nn.Bilinear(dim, dim, 1)
         #这个双线性层将两个dim维的输入向量映射到一个标量输出
@@ -58,7 +58,7 @@ class Discriminator(nn.Module):
 
         Returns
         -------
-            
+            合并后的张量
         """
         #拓展上下文向量
         c_x1 = c1.expand_as(h1).contiguous()
@@ -100,7 +100,7 @@ class MVGRL(nn.Module):
         self.act_fn = nn.Sigmoid()
 
     def get_embedding(self, graph, diff_graph, feat, edge_weight):
-        """前向传播
+        """
 
         Parameters
         ----------
@@ -119,7 +119,7 @@ class MVGRL(nn.Module):
         """
         h1 = self.encoder1(graph, feat)
         h2 = self.encoder2(diff_graph, feat, edge_weight=edge_weight)
-
+        #pytorch中的张量加法必须保证两个相加的张量必须在每个维度上大小匹配，所以应该构建一样大的图
         return (h1 + h2).detach()#使用detach把嵌入从计算图里面分离，避免后续计算中更新就编码器的参数
 
     def forward(self, graph, diff_graph, feat, shuf_feat, edge_weight):
